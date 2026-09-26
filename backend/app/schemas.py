@@ -28,6 +28,25 @@ class EntryPayload(BaseModel):
     remark: str | None = None
 
 
+class BatchActionPayload(BaseModel):
+    """批量动作请求：一批记录 id 加同一个动作。"""
+
+    ids: list[int] = Field(default_factory=list)
+    action: str = ""
+
+
+class BatchActionResult(BaseModel):
+    """批量动作结果：汇总计数加逐条明细，明细里每个 id 只出现一次。"""
+
+    ok: bool
+    message: str
+    total: int = 0
+    succeeded: int = 0
+    skipped: int = 0
+    failed: int = 0
+    details: list[dict[str, Any]] = Field(default_factory=list)
+
+
 
 class SampleEntry(BaseModel):
     """检测样品明细结构。"""

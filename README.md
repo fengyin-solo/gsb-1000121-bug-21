@@ -73,4 +73,7 @@ npm run dev
 - 每个模块的前端页面在 `frontend/src/views/<模块>/index.vue`，后端接口在
   `backend/app/routers/<模块>.py`，业务规则在 `backend/app/services/<模块>.py`。
 - 列表接口统一返回 `{ items, total, page, size }`，动作接口统一返回 `{ ok, message }`。
+- 批量动作走 `POST /api/<模块>/batch`，入参 `{ ids, action }`，返回
+  `{ ok, message, total, succeeded, skipped, failed, details }`：ids 先去重再逐条流转，
+  已处于目标状态的记录记为“跳过”，重复提交不会重复执行，每批明细里每个 id 只有一条结论。
 - 状态流转只允许在 `app/services` 里改，路由层不做业务判断。
