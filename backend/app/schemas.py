@@ -28,6 +28,25 @@ class EntryPayload(BaseModel):
     remark: str | None = None
 
 
+class BatchActionItem(BaseModel):
+    """批量处理中一条记录的逐条反馈。"""
+
+    id: int
+    ok: bool
+    message: str
+
+
+class BatchActionResult(BaseModel):
+    """批量处理结果：整体结论 + 逐条明细，明细按 id 唯一。"""
+
+    ok: bool
+    message: str
+    total: int = 0
+    succeeded: int = 0
+    failed: int = 0
+    items: list[BatchActionItem] = Field(default_factory=list)
+
+
 
 class SampleEntry(BaseModel):
     """检测样品明细结构。"""

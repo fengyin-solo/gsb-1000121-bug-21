@@ -7,6 +7,9 @@ export function request(path: string, init?: RequestInit): Promise<Response> {
     headers: { 'Content-Type': 'application/json' },
     ...init,
   }).catch((error: unknown) => {
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      throw error
+    }
     const detail = error instanceof Error ? error.message : '请求未送达'
     throw new Error(`接口请求失败：${detail}`)
   })

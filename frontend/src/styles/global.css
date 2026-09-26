@@ -33,3 +33,13 @@ body { margin: 0; background: #f6f8fb; color: #1f2937; }
 .link { border: none; background: none; color: var(--brand); cursor: pointer; padding: 0; }
 .page-foot { display: flex; justify-content: space-between; margin-top: 8px; font-size: 12px; color: var(--muted); }
 .error-text { color: #b42318; }
+.notice-text { color: #067647; }
+.btn:disabled, .link:disabled { opacity: 0.5; cursor: not-allowed; }
+.batch-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font-size: 13px; }
+.batch-summary { color: var(--muted); }
+.batch-hint { color: var(--muted); }
+.batch-result { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; margin-top: 12px; }
+.batch-result-head { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+.batch-result-list { margin: 0; padding-left: 18px; font-size: 12px; }
+.batch-result-list li.ok { color: #067647; }
+.batch-result-list li.fail { color: #b42318; }

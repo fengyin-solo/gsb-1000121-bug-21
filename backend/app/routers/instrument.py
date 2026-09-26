@@ -5,7 +5,7 @@ from typing import Any
 
 from fastapi import APIRouter, HTTPException, Query
 
-from app.schemas import ActionResult, EntryPayload, PageResult
+from app.schemas import ActionResult, BatchActionItem, BatchActionResult, EntryPayload, PageResult
 from app.services.instrument import InstrumentService
 
 router = APIRouter(prefix="/api/instrument", tags=["仪器管理"])
@@ -46,6 +46,26 @@ def create_entry(payload: EntryPayload) -> ActionResult:
     if missing:
         return ActionResult(ok=False, message=f"缺少必填字段：{'、'.join(missing)}")
     return ActionResult(ok=True, message="检测仪器已登记", entry=entry)
+
+
+@router.post("/actions/batch", response_model=BatchActionResult)
+def run_batch_action(payload: EntryPayload) -> BatchActionResult:
+    """批量处理多条检测仪器：空选、非法动作、部分失败都给出明确结论，逐条反馈且明细按 id 唯一。"""
+    action = str(payload.values.get("action") or "").strip()
+    raw_ids = payload.values.get("ids") or []
+    if not isinstance(raw_ids, list):
+        raw_ids = [raw_ids]
+    result = service.run_batch_action(raw_ids, action)
+    items = [BatchActionItem(**item) for item in result["items"]]
+    succeeded = sum(1 for item in items if item.ok)
+    return BatchActionResult(
+        ok=bool(result["ok"]),
+        message=str(result["message"]),
+        total=len(items),
+        succeeded=succeeded,
+        failed=len(items) - succeeded,
+        items=items,
+    )
 
 
 @router.post("/{entry_id}/actions", response_model=ActionResult)
